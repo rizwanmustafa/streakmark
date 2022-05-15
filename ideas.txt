@@ -1,0 +1,38 @@
+Technical Stuff
+  Technical Stack:
+  - Frontend: ReactJS, HTML, SASS
+  - Backend: Express, MongoDB
+
+  Database Stuff:
+  - Create indexes to speed up data retrieval
+
+  License: 
+  - AGPL v3
+
+  Commercialization Ideas:
+  - Limit the amount of feeds, boards and color schemes
+
+Product Stuff
+  General Features:
+  - Users should be able to create a new feed
+  - Users should be able to create a new board
+  - Users should be able to create multiple feeds and Boards
+  - Users should be able to click on a block on a board and get to know what they did on that day
+
+  [Feeds]
+  They will act as input data for a board
+  - Users should be able to get their feeds
+  - Users should be able to create a feed
+  - Users should be able to delete a feed
+  - Users should be able to export their feeds to JSON
+  - Users should be able to import their feeds from JSON
+  - Users should be able to add an entry to the feed
+  - Users should be able to modify an entry to the feed
+  - Users should be able to delete an entry from the feed
+  - Properties: ID, Name, Description, Data
+    - Structure of 'data': "year": { "month": { "1": ["One Task", "Two Task"] } }
+
+
+  Boards:
+  - Properties: Name, Description, Feeds, Theme
+
