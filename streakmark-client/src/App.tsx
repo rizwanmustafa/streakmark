@@ -7,9 +7,11 @@ function App(): JSX.Element {
       <h1 style={{ color: "white", fontFamily: "Roboto, sans-serif" }}>Programming</h1>
       <Board year={2021} feeds={[]} />
       <Week
-      borderRadius={1}
+        weekNumber={1}
+        startDay={1}
+        month={1}
+        borderRadius={1}
         year={2021}
-        weekNumber={2}
         average={5}
         highest={10}
         lowest={0}

@@ -1,6 +1,8 @@
 import Day from "../Day/Day";
 
 interface Props {
+  startDay: number;
+  month: number;
   year: Streakmark.Year;
   weekNumber: number;
   average: number;
@@ -27,22 +29,22 @@ function getDayColor(value: number, average: number, highest: number, lowest: nu
   if (minDiff === diffAvg)
     return colors[2];
   else if (minDiff === diffHighest)
-    return colors[4];
+    return colors[3];
   else
     return colors[1];
 
 }
 
-const weekDay: Record<number, string> = {
-  0: "Monday",
-  1: "Tuesday",
-  2: "Wednesday",
-  3: "Thursday",
-  4: "Friday",
-  5: "Saturday",
-  6: "Sunday",
+// const weekDay: Record<number, string> = {
+//   0: "Monday",
+//   1: "Tuesday",
+//   2: "Wednesday",
+//   3: "Thursday",
+//   4: "Friday",
+//   5: "Saturday",
+//   6: "Sunday",
 
-}
+// }
 
 const weekStyles: React.CSSProperties = {
   display: "flex",
@@ -53,15 +55,21 @@ const weekStyles: React.CSSProperties = {
   backgroundColor: "transparent"
 }
 
+// function getDayName(date: Date): string {
+//   return date.toLocaleDateString("en-US", { weekday: "long" });
+// }
+
 function Week(props: Props): JSX.Element {
   const dayElements = [];
 
   for (let i = 0; i < 7; i++) {
+    const currentDate = new Date(props.year, props.month, props.startDay + i);
+    const displayDate = currentDate.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     dayElements.push(
       <Day
         borderRadius={props.borderRadius}
         color={getDayColor(props.dailyData[i].length, props.average, props.highest, props.lowest)}
-        hoverText={`Week ${props.weekNumber} ${weekDay[i]}`}
+        hoverText={`${props.dailyData[i].length} tasks completed on ${displayDate}`}
       />
     )
   }
