@@ -55,15 +55,33 @@ const weekStyles: React.CSSProperties = {
   backgroundColor: "transparent"
 }
 
-// function getDayName(date: Date): string {
-//   return date.toLocaleDateString("en-US", { weekday: "long" });
-// }
+function getDayName(date: Date): string {
+  return date.toLocaleDateString("en-US", { weekday: "long" });
+}
 
 function Week(props: Props): JSX.Element {
-  const dayElements = [];
+  const dayElements: JSX.Element[] = [];
+
+  let currentDate = new Date(props.year, props.month, props.startDay);
+  for (let i = 0; i < 7; i++) {
+    currentDate.setDate(currentDate.getDate() - 1);
+    if (getDayName(currentDate).toLowerCase() === "sunday") break;
+
+    dayElements.push(
+      // Later replace this with another component called PlaceholderDay
+      <Day
+        borderRadius={props.borderRadius}
+        color={colors[0]}
+        hoverText=""
+      />
+    );
+
+
+  };
+
+  currentDate = new Date(props.year, props.month, props.startDay);
 
   for (let i = 0; i < 7; i++) {
-    const currentDate = new Date(props.year, props.month, props.startDay + i);
     const displayDate = currentDate.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     dayElements.push(
       <Day
@@ -72,7 +90,10 @@ function Week(props: Props): JSX.Element {
         hoverText={`${props.dailyData[i].length} tasks completed on ${displayDate}`}
       />
     )
-  }
+
+    currentDate.setDate(currentDate.getDate() + 1);
+    if (getDayName(currentDate).toLowerCase() === "monday") break;
+  };
 
 
   return (
