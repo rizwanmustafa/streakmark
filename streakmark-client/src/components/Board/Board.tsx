@@ -1,31 +1,62 @@
-import Day from "../Day/Day";
+import { getDayName } from "../../scripts/misc";
+import Week from "../Week/Week";
 import "./Board.css";
 interface Props {
   year: Streakmark.Year;
   feeds: Streakmark.Feed[];
+  colors: string[];
 }
 
-const colors = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"]
+
+function isDateValid(day: number, month: number, year: number) {
+  const newDate = new Date(year, month, day);
+  return newDate.getFullYear() === year && newDate.getMonth() === month && newDate.getDate() === day;
+}
+
+function generateRandomDailyData(): Record<number, string[]> {
+  const dailyData: Record<number, string[]> = {};
+
+  for (let i = 0; i < 7; i++) {
+    dailyData[i] = [];
+    const check = Math.floor(Math.random() * 24);
+    for (let j = 0; j < check; j++) {
+      dailyData[i].push(Math.floor(Math.random() * 100).toString());
+    }
+  }
+
+  return dailyData;
+}
 
 function Board(props: Props): JSX.Element {
-  const myWeeklyElements = [];
+  const weekElements = [];
 
-  for (let i = 0; i <= 52; i++) {
-    myWeeklyElements.push(
-      <div className="week">
-        <Day borderRadius={50} color={colors[Math.floor(Math.random() * 5)]} hoverText={`Week ${i} Monday`} />
-        <Day borderRadius={50} color={colors[Math.floor(Math.random() * 5)]} hoverText={`Week ${i} Tuesday`} />
-        <Day borderRadius={50} color={colors[Math.floor(Math.random() * 5)]} hoverText={`Week ${i} Wednesday`} />
-        <Day borderRadius={50} color={colors[Math.floor(Math.random() * 5)]} hoverText={`Week ${i} Thursday`} />
-        <Day borderRadius={50} color={colors[Math.floor(Math.random() * 5)]} hoverText={`Week ${i} Friday`} />
-        <Day borderRadius={50} color={colors[Math.floor(Math.random() * 5)]} hoverText={`Week ${i} Saturday`} />
-        <Day borderRadius={50} color={colors[Math.floor(Math.random() * 5)]} hoverText={`Week ${i} Sunday`} />
-      </div>
-    )
+  for (let month = 0; month < 12; month++) {
+    for (let day = 1; day < 31; day++) {
+      if (!isDateValid(day, month, props.year)) continue;
+
+      if ((day === 1 && month === 0) || getDayName(new Date(props.year, month, day)).toLowerCase() === "monday") {
+        weekElements.push(
+          <Week
+            average={10}
+            borderRadius={10}
+            highest={20}
+            lowest={5}
+            dailyData={generateRandomDailyData()}
+            month={month}
+            startDay={day}
+            year={props.year}
+            colors={props.colors}
+            key={`${month}-${day}-${props.year}`}
+          />
+        )
+
+      }
+    }
   }
+
   return (
     <div id="board">
-      {myWeeklyElements}
+      {weekElements}
     </div>
   );
 }

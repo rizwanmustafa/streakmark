@@ -1,10 +1,13 @@
 import Day from "../Day/Day";
 
+import { getDayName } from "../../scripts/misc";
+
+
 interface Props {
   startDay: number;
   month: number;
+  colors: string[];
   year: Streakmark.Year;
-  weekNumber: number;
   average: number;
   highest: number;
   lowest: number;
@@ -12,9 +15,8 @@ interface Props {
   borderRadius: number;
 }
 
-const colors = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"]
 
-function getDayColor(value: number, average: number, highest: number, lowest: number): string {
+function getDayColor(colors: string[], value: number, average: number, highest: number, lowest: number): string {
   if (value === 0) return colors[0];
 
   if (value <= lowest) return colors[1];
@@ -55,10 +57,6 @@ const weekStyles: React.CSSProperties = {
   backgroundColor: "transparent"
 }
 
-function getDayName(date: Date): string {
-  return date.toLocaleDateString("en-US", { weekday: "long" });
-}
-
 function Week(props: Props): JSX.Element {
   const dayElements: JSX.Element[] = [];
 
@@ -71,7 +69,7 @@ function Week(props: Props): JSX.Element {
       // Later replace this with another component called PlaceholderDay
       <Day
         borderRadius={props.borderRadius}
-        color={colors[0]}
+        color={props.colors[0]}
         hoverText=""
       />
     );
@@ -86,7 +84,7 @@ function Week(props: Props): JSX.Element {
     dayElements.push(
       <Day
         borderRadius={props.borderRadius}
-        color={getDayColor(props.dailyData[i].length, props.average, props.highest, props.lowest)}
+        color={getDayColor(props.colors, props.dailyData[i].length, props.average, props.highest, props.lowest)}
         hoverText={`${props.dailyData[i].length} tasks completed on ${displayDate}`}
       />
     )
