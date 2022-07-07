@@ -1,10 +1,11 @@
 import { Months } from "../constants";
-import { getMaxDays } from "./misc";
+import { getMaxDays, getMonthName } from "./misc";
 
 export class MonthHandler {
-  month: Months;
-  daysData: string[][];
-  maxDayNum: number;
+  private month: Months;
+  private daysData: string[][];
+  private maxDayNum: number;
+  private totalTaskCount = -1;
 
   constructor(month: Months, daysData: string[][]) {
     this.month = month;
@@ -16,9 +17,15 @@ export class MonthHandler {
         `MonthHandler: ${daysData.length} !== ${getMaxDays(month)}`
       );
       throw new Error(
-        `Expected ${getMaxDays(month)} days but got ${daysData.length}`
+        `Expected data for ${getMaxDays(month)} days but got ${daysData.length}`
       );
     }
+
+    this.updateTaskCount();
+  }
+
+  getMonthName() {
+    return getMonthName(this.month);
   }
 
   getDayData(dayNum: number): string[] {
@@ -37,8 +44,20 @@ export class MonthHandler {
     }
 
     this.daysData[dayNum - 1] = newData;
+
+    this.updateTaskCount();
   }
 
+  getTaskCount() {
+    return this.totalTaskCount;
+  }
+
+  private updateTaskCount() {
+    this.totalTaskCount = 0;
+    for (const dayData of this.daysData) {
+      this.totalTaskCount += dayData.length;
+    }
+  }
 }
 
 export default MonthHandler;

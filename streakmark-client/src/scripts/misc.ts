@@ -18,3 +18,7 @@ export function getMaxDays(month: Months): number {
     return 31;
   }
 }
+
+export function getMonthName(month: Months): string {
+  return Months[month];
+}
