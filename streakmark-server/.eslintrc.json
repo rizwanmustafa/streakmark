@@ -1,5 +1,6 @@
 {
     "env": {
+        "node": true,
         "browser": true,
         "es2021": true
     },
@@ -31,6 +32,7 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "@typescript-eslint/explicit-function-return-type": 2
     }
 }
