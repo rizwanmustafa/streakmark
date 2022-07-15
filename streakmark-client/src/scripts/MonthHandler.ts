@@ -6,8 +6,10 @@ export class MonthHandler {
   private daysData: string[][];
   private maxDayNum: number;
   private totalTaskCount = -1;
+  private feedId: string;
 
-  constructor(month: Months, daysData: string[][]) {
+  constructor(feedId: string, month: Months, daysData: string[][]) {
+    this.feedId = feedId;
     this.month = month;
     this.daysData = daysData;
     this.maxDayNum = getMaxDays(month);
@@ -22,6 +24,14 @@ export class MonthHandler {
     }
 
     this.updateTaskCount();
+  }
+
+  getFeedId() {
+    return this.feedId;
+  }
+
+  getMonth(): Months {
+    return this.month;
   }
 
   getMonthName() {
