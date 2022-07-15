@@ -1,6 +1,9 @@
 import express from "express";
 import morgan from "morgan";
 
+// Import middleware
+import errorHandler from "./middlewares/error";
+
 // Import routes
 import UsersRouter from "./routes/users";
 
@@ -16,9 +19,13 @@ app.use(morgan("combined"));
 // Setup routes
 app.use("/users", UsersRouter);
 
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+// Setup error handling
+app.use(errorHandler);
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
