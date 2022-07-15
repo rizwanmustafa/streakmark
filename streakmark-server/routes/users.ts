@@ -6,7 +6,7 @@ import { validateRequest } from "../middlewares/api-utils";
 
 const router = Router();
 
-router.get(
+router.post(
   "/",
   validateRequest({
     body: {
@@ -17,8 +17,5 @@ router.get(
   }),
   addUser
 );
-router.post("/", (req, res) => {
-  res.send("POST to user");
-});
 
 export default router;

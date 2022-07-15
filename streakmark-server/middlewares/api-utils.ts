@@ -25,7 +25,7 @@ export function validateRequest(
         throw new MarkError(
           422,
           validationErrorMessage ??
-            `${errorMessage} (${error.details[0]?.context?.value}`
+            `${errorMessage} (${error.details[0]?.context?.value})`
         );
       }
     });
