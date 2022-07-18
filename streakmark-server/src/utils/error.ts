@@ -12,7 +12,7 @@ class MarkError extends Error {
     this.stack = stack;
     this.uid = uid;
 
-    if (process.env.MODE === "dev") {
+    if (process.env.STREAKMARK_SERVER_MODE === "dev") {
       this.message = stack
         ? String(message) + "\nStack: " + String(stack)
         : String(message);
