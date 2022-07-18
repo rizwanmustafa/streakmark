@@ -3,6 +3,9 @@
 build
 .env
 
+## Logs
+**/*.log
+
 # Yarn
 .pnp.*
 .yarn/*

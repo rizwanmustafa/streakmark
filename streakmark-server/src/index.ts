@@ -8,6 +8,9 @@ import errorHandler from "./middlewares/error-handler";
 // Import routes
 import UsersRouter from "./routes/users";
 
+// Import utils
+import Logger from "./utils/logger";
+
 const app = express();
 const port = 3000;
 
@@ -28,5 +31,5 @@ app.get("/", (req, res) => {
 app.use(errorHandler);
 
 app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
+  Logger.success(`Express is listening at http://localhost:${port}`);
 });
