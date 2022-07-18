@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import morgan from "morgan";
 
@@ -18,7 +19,6 @@ app.use(morgan("combined"));
 
 // Setup routes
 app.use("/users", UsersRouter);
-
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
