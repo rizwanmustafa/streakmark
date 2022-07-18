@@ -17,6 +17,14 @@ const port = parseInt(process.env.STREAKMARK_SERVER_PORT ?? "5000");
 // Setup json body parser
 app.use(express.json());
 
+// Setup request counter
+let reqeuestCounter = 0;
+
+app.use((_req, _res, next) => {
+  reqeuestCounter += 1;
+  next();
+});
+
 // Setup morgan
 app.use(morgan("combined"));
 
@@ -24,7 +32,11 @@ app.use(morgan("combined"));
 app.use("/users", UsersRouter);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.json({
+    message: "Welcome to Streakmark Server",
+    requestCount: reqeuestCounter,
+    version: process.env.STREAKMARK_SERVER_VERSION ?? "0.0.0",
+  });
 });
 
 // Setup error handling
