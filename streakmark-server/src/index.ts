@@ -2,7 +2,7 @@ import express from "express";
 import morgan from "morgan";
 
 // Import middleware
-import errorHandler from "./middlewares/error";
+import errorHandler from "./middlewares/error-handler";
 
 // Import routes
 import UsersRouter from "./routes/users";
