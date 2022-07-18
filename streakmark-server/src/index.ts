@@ -12,7 +12,7 @@ import UsersRouter from "./routes/users";
 import Logger from "./utils/logger";
 
 const app = express();
-const port = 3000;
+const port = parseInt(process.env.STREAKMARK_SERVER_PORT ?? "5000");
 
 // Setup json body parser
 app.use(express.json());
