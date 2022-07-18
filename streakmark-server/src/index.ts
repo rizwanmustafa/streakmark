@@ -2,6 +2,9 @@ import "dotenv/config";
 import express from "express";
 import morgan from "morgan";
 
+// Import database
+import connectToDB from "./init/db";
+
 // Import middleware
 import errorHandler from "./middlewares/error-handler";
 
@@ -11,8 +14,18 @@ import UsersRouter from "./routes/users";
 // Import utils
 import Logger from "./utils/logger";
 
+process.on("uncaughtException", (e) => {
+  console.error("----- UNCAUGHT EXCEPTION -----");
+  console.error("An uncaughtException has occurred:");
+  console.error(e);
+  console.error("----- UNCAUGHT EXCEPTION -----");
+});
+
 const app = express();
 const port = parseInt(process.env.STREAKMARK_SERVER_PORT ?? "5000");
+
+connectToDB();
+
 
 // Setup json body parser
 app.use(express.json());
