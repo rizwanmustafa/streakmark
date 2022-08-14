@@ -30,6 +30,18 @@ export async function addTask(uid: string, task: StreakMarkServer.Task): Promise
   await tasks.insertOne({
     _id: taskId,
     ...task,
-
   });
+}
+
+export async function getTasks(uid: string, feedId: string | null): Promise<StreakMarkServer.Task[]> {
+  const tasks = getCollection<StreakMarkServer.Task>("tasks");
+  const query: { uid: string, feedId?: ObjectId } = {
+    uid: uid,
+  };
+  if (feedId) {
+    query.feedId = new ObjectId(feedId);
+  }
+  const cursor = tasks.find(query);
+  const tasksArray = await cursor.toArray();
+  return tasksArray;
 }
