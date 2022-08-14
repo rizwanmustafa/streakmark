@@ -46,20 +46,56 @@ export async function getTasks(uid: string, feedId: string | null): Promise<Stre
   return tasksArray;
 }
 
-export async function updateTask(uid: string, taskId: string, task: StreakMarkServer.Task): Promise<void> {
-  const tasks = getCollection("tasks");
+export async function updateTask(uid: string, taskId: string, newTask: StreakMarkServer.Task): Promise<void> {
+  const user = await getUserWithUid(uid);
+  if (!user) {
+    Logger.warning(`User with uid ${uid} does not exist`);
+    return;
+  }
+
+  const tasks = getCollection<StreakMarkServer.Task>("tasks");
+  const task = await tasks.findOne({ _id: new ObjectId(taskId) });
+
+  if (!task) {
+    Logger.warning(`Task with id ${taskId} does not exist`);
+    return;
+  }
+
+  if (task.uid !== uid) {
+    Logger.error("User does not own task");
+    return;
+  }
+
   const query = {
     uid: uid,
     _id: new ObjectId(taskId),
   };
   const update = {
-    $set: task,
+    $set: newTask,
   };
-  await tasks.updateOne(query, update, { upsert: false });
+  await tasks.updateOne(query, update);
 }
 
 export async function deleteTask(uid: string, taskId: string): Promise<void> {
-  const tasks = getCollection("tasks");
+  const user = await getUserWithUid(uid);
+  if (!user) {
+    Logger.warning(`User with uid ${uid} does not exist`);
+    return;
+  }
+
+  const tasks = getCollection<StreakMarkServer.Task>("tasks");
+  const task = await tasks.findOne({ _id: new ObjectId(taskId) });
+
+  if (!task) {
+    Logger.warning(`Task with id ${taskId} does not exist`);
+    return;
+  }
+
+  if (task.uid !== uid) {
+    Logger.error("User does not own task");
+    return;
+  }
+
   const query = {
     uid: uid,
     _id: new ObjectId(taskId),
