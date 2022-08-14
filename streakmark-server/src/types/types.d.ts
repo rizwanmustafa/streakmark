@@ -1,7 +1,7 @@
-import { ObjectId } from "mongodb";
+type ObjectId = import("mongodb").ObjectId;
 
 declare namespace StreakMarkServer {
-
+  
   interface User {
     uid: string;
     username: string;
