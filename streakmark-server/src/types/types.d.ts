@@ -1,7 +1,7 @@
 type ObjectId = import("mongodb").ObjectId;
 
 declare namespace StreakMarkServer {
-  
+
   interface User {
     uid: string;
     username: string;
@@ -11,11 +11,13 @@ declare namespace StreakMarkServer {
   }
 
   interface Feed {
+    uid: string;
     title: string;
     description: string;
   }
 
   interface Task {
+    uid: string;
     title: string;
     completionDate: string;
     feedId: ObjectId;
