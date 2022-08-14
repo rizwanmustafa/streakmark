@@ -1,4 +1,4 @@
-import { MongoClient, Db } from "mongodb";
+import { MongoClient, Db, Collection, Document } from "mongodb";
 import Logger from "../utils/logger";
 
 export let mongoClient: MongoClient | null = null;
@@ -24,4 +24,13 @@ export async function connectToDB(): Promise<void> {
     Logger.error((err as Error).message);
     process.exit(1);
   }
+}
+
+export async function getCollection(collectionName: string): Promise<Collection<Document> | null> {
+  if (!mongoDB) {
+    Logger.warning("MongoDB is not connected");
+    await connectToDB();
+  }
+  return mongoDB ? mongoDB.collection(collectionName) : null;
+
 }
