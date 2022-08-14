@@ -1,4 +1,4 @@
-declare namespace Streakmark {
+declare namespace StreakmarkClient {
   interface Feed {
     id: string;
     name: string;

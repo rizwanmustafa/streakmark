@@ -7,7 +7,7 @@ interface Props {
   startDay: number;
   month: number;
   colors: string[];
-  year: Streakmark.Year;
+  year: StreakmarkClient.Year;
   average: number;
   highest: number;
   lowest: number;

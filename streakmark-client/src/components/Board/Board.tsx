@@ -2,8 +2,8 @@ import { getDayName } from "../../scripts/misc";
 import Week from "../Week/Week";
 import "./Board.css";
 interface Props {
-  year: Streakmark.Year;
-  feeds: Streakmark.Feed[];
+  year: StreakmarkClient.Year;
+  feeds: StreakmarkClient.Feed[];
   colors: string[];
 }
 
