@@ -45,3 +45,24 @@ export async function getTasks(uid: string, feedId: string | null): Promise<Stre
   const tasksArray = await cursor.toArray();
   return tasksArray;
 }
+
+export async function updateTask(uid: string, taskId: string, task: StreakMarkServer.Task): Promise<void> {
+  const tasks = getCollection("tasks");
+  const query = {
+    uid: uid,
+    _id: new ObjectId(taskId),
+  };
+  const update = {
+    $set: task,
+  };
+  await tasks.updateOne(query, update, { upsert: false });
+}
+
+export async function deleteTask(uid: string, taskId: string): Promise<void> {
+  const tasks = getCollection("tasks");
+  const query = {
+    uid: uid,
+    _id: new ObjectId(taskId),
+  };
+  await tasks.deleteOne(query);
+}
