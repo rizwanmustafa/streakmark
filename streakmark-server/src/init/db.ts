@@ -1,4 +1,5 @@
-import { MongoClient, Db, Collection, Document } from "mongodb";
+import { MongoClient, Db, Collection, Document, WithId } from "mongodb";
+import MarkError from "../utils/error";
 import Logger from "../utils/logger";
 
 export let mongoClient: MongoClient | null = null;
@@ -26,11 +27,10 @@ export async function connectToDB(): Promise<void> {
   }
 }
 
-export async function getCollection(collectionName: string): Promise<Collection<Document> | null> {
+export function getCollection<T>(collectionName: string): Collection<WithId<T>> {
   if (!mongoDB) {
-    Logger.warning("MongoDB is not connected");
-    await connectToDB();
+    throw new MarkError(500, "MongoDB is not connected");
   }
-  return mongoDB ? mongoDB.collection(collectionName) : null;
 
+  return mongoDB.collection(collectionName);
 }
