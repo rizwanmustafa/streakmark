@@ -3,19 +3,19 @@ import { getCollection } from "../init/db";
 import Logger from "../utils/logger";
 import { getUserWithUid, getFeedWithId } from "../utils/misc";
 
-// TODO: Replace these Logger.warnings with MarkErrors
+// TODO: Replace these Logger.errors with MarkErrors
 
 export async function addTask(uid: string, task: StreakMarkServer.Task): Promise<void> {
 
   const user = await getUserWithUid(uid);
   if (!user) {
-    Logger.warning(`User with uid ${uid} does not exist`);
+    Logger.error(`User with uid ${uid} does not exist`);
     return;
   }
 
   const feed = await getFeedWithId(task.feedId.toString());
   if (!feed) {
-    Logger.warning(`Feed with id ${task.feedId} does not exist`);
+    Logger.error(`Feed with id ${task.feedId} does not exist`);
     return;
   }
 
@@ -24,7 +24,7 @@ export async function addTask(uid: string, task: StreakMarkServer.Task): Promise
     return;
   }
 
-  const tasks = getCollection("tasks");
+  const tasks = getCollection<StreakMarkServer.Task>("tasks");
   const taskId = new ObjectId();
 
   await tasks.insertOne({
@@ -49,7 +49,7 @@ export async function getTasks(uid: string, feedId: string | null): Promise<Stre
 export async function updateTask(uid: string, taskId: string, newTask: StreakMarkServer.Task): Promise<void> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    Logger.warning(`User with uid ${uid} does not exist`);
+    Logger.error(`User with uid ${uid} does not exist`);
     return;
   }
 
@@ -57,7 +57,7 @@ export async function updateTask(uid: string, taskId: string, newTask: StreakMar
   const task = await tasks.findOne({ _id: new ObjectId(taskId) });
 
   if (!task) {
-    Logger.warning(`Task with id ${taskId} does not exist`);
+    Logger.error(`Task with id ${taskId} does not exist`);
     return;
   }
 
@@ -79,7 +79,7 @@ export async function updateTask(uid: string, taskId: string, newTask: StreakMar
 export async function deleteTask(uid: string, taskId: string): Promise<void> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    Logger.warning(`User with uid ${uid} does not exist`);
+    Logger.error(`User with uid ${uid} does not exist`);
     return;
   }
 
@@ -87,7 +87,7 @@ export async function deleteTask(uid: string, taskId: string): Promise<void> {
   const task = await tasks.findOne({ _id: new ObjectId(taskId) });
 
   if (!task) {
-    Logger.warning(`Task with id ${taskId} does not exist`);
+    Logger.error(`Task with id ${taskId} does not exist`);
     return;
   }
 
