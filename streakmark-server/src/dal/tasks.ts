@@ -24,24 +24,24 @@ export async function addTask(uid: string, task: StreakMarkServer.Task): Promise
     return;
   }
 
-  const tasks = getCollection<StreakMarkServer.Task>("tasks");
+  const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
   const taskId = new ObjectId();
 
-  await tasks.insertOne({
+  await taskCollection.insertOne({
     _id: taskId,
     ...task,
   });
 }
 
 export async function getTasks(uid: string, feedId: string | null): Promise<StreakMarkServer.Task[]> {
-  const tasks = getCollection<StreakMarkServer.Task>("tasks");
+  const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
   const query: { uid: string, feedId?: ObjectId } = {
     uid: uid,
   };
   if (feedId) {
     query.feedId = new ObjectId(feedId);
   }
-  const cursor = tasks.find(query);
+  const cursor = taskCollection.find(query);
   const tasksArray = await cursor.toArray();
   return tasksArray;
 }
@@ -53,8 +53,8 @@ export async function updateTask(uid: string, taskId: string, newTask: StreakMar
     return;
   }
 
-  const tasks = getCollection<StreakMarkServer.Task>("tasks");
-  const task = await tasks.findOne({ _id: new ObjectId(taskId) });
+  const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
+  const task = await taskCollection.findOne({ _id: new ObjectId(taskId) });
 
   if (!task) {
     Logger.error(`Task with id ${taskId} does not exist`);
@@ -73,7 +73,7 @@ export async function updateTask(uid: string, taskId: string, newTask: StreakMar
   const update = {
     $set: newTask,
   };
-  await tasks.updateOne(query, update);
+  await taskCollection.updateOne(query, update);
 }
 
 export async function deleteTask(uid: string, taskId: string): Promise<void> {
@@ -83,8 +83,8 @@ export async function deleteTask(uid: string, taskId: string): Promise<void> {
     return;
   }
 
-  const tasks = getCollection<StreakMarkServer.Task>("tasks");
-  const task = await tasks.findOne({ _id: new ObjectId(taskId) });
+  const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
+  const task = await taskCollection.findOne({ _id: new ObjectId(taskId) });
 
   if (!task) {
     Logger.error(`Task with id ${taskId} does not exist`);
@@ -100,5 +100,5 @@ export async function deleteTask(uid: string, taskId: string): Promise<void> {
     uid: uid,
     _id: new ObjectId(taskId),
   };
-  await tasks.deleteOne(query);
+  await taskCollection.deleteOne(query);
 }
