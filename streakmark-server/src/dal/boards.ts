@@ -6,7 +6,7 @@ import MarkError from "../utils/error";
 export async function addBoard(uid: string, board: StreakMarkServer.Board): Promise<InsertOneResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist`);
   }
 
   const boardCollection = getCollection<StreakMarkServer.Board>("boards");
@@ -18,14 +18,14 @@ export async function addBoard(uid: string, board: StreakMarkServer.Board): Prom
 export async function removeBoard(uid: string, boardId: string): Promise<DeleteResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist`);
   }
 
   const boardCollection = getCollection<StreakMarkServer.Board>("boards");
   const board = await boardCollection.findOne({ _id: new ObjectId(boardId) });
 
   if (!board) {
-    throw new MarkError(404, `Board with id ${boardId} does not exist`);
+    throw new MarkError(404, `Board with id "${boardId}" does not exist`);
   }
 
   if (board.uid !== uid) {
@@ -54,7 +54,7 @@ export async function getBoards(uid: string, boardId: string | null): Promise<St
 export async function updateBoard(uid: string, boardId: string, newBoard: StreakMarkServer.Board): Promise<UpdateResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist`);
   }
 
   const boardCollection = getCollection<StreakMarkServer.Board>("boards");
@@ -62,7 +62,7 @@ export async function updateBoard(uid: string, boardId: string, newBoard: Streak
   const board = await boardCollection.findOne({ _id: boardObjectId });
 
   if (!board) {
-    throw new MarkError(404, `Board with id ${boardId} does not exist`);
+    throw new MarkError(404, `Board with id "${boardId}" does not exist`);
   }
 
   if (board.uid !== uid) {

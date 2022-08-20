@@ -7,12 +7,12 @@ export async function addTask(uid: string, task: StreakMarkServer.Task): Promise
 
   const user = await getUserWithUid(uid);
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist`);
   }
 
   const feed = await getFeedWithId(task.feedId.toString());
   if (!feed) {
-    throw new MarkError(404, `Feed with id ${task.feedId} does not exist`);
+    throw new MarkError(404, `Feed with id "${task.feedId}" does not exist`);
   }
 
   if (feed.uid !== uid) {
@@ -31,7 +31,7 @@ export async function addTask(uid: string, task: StreakMarkServer.Task): Promise
 export async function getTasks(uid: string, feedId: string | null): Promise<StreakMarkServer.Task[]> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist`);
   }
 
   const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
@@ -49,14 +49,14 @@ export async function getTasks(uid: string, feedId: string | null): Promise<Stre
 export async function updateTask(uid: string, taskId: string, newTask: StreakMarkServer.Task): Promise<UpdateResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist`);
   }
 
   const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
   const task = await taskCollection.findOne({ _id: new ObjectId(taskId) });
 
   if (!task) {
-    throw new MarkError(404, `Task with id ${taskId} does not exist`);
+    throw new MarkError(404, `Task with id "${taskId}" does not exist`);
   }
 
   if (task.uid !== uid) {
@@ -76,14 +76,14 @@ export async function updateTask(uid: string, taskId: string, newTask: StreakMar
 export async function deleteTask(uid: string, taskId: string): Promise<DeleteResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist`);
   }
 
   const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
   const task = await taskCollection.findOne({ _id: new ObjectId(taskId) });
 
   if (!task) {
-    throw new MarkError(404, `Task with id ${taskId} does not exist`);
+    throw new MarkError(404, `Task with id "${taskId}" does not exist`);
   }
 
   if (task.uid !== uid) {

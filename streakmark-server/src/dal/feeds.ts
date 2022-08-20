@@ -7,7 +7,7 @@ export async function addFeed(uid: string, feed: StreakMarkServer.Feed): Promise
   const user = getUserWithUid(uid);
 
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist!`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist!`);
   }
 
   if (feed.uid !== uid) {
@@ -42,7 +42,7 @@ export async function getFeeds(uid: string, feedId: string | null): Promise<Stre
 export async function updateFeed(uid: string, feedId: string, newFeed: StreakMarkServer.Feed): Promise<UpdateResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist`);
   }
 
   const feedCollection = getCollection<StreakMarkServer.Feed>("feeds");
@@ -50,7 +50,7 @@ export async function updateFeed(uid: string, feedId: string, newFeed: StreakMar
   const feed = await feedCollection.findOne({ _id: feedObjectId });
 
   if (!feed) {
-    throw new MarkError(404, `Feed with id ${feedId} does not exist`);
+    throw new MarkError(404, `Feed with id "${feedId}" does not exist`);
   }
 
   if (feed.uid !== uid) {
@@ -73,7 +73,7 @@ export async function removeFeed(uid: string, feedId: string): Promise<DeleteRes
   const user = getUserWithUid(uid);
 
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist!`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist!`);
   }
 
   const feedCollection = getCollection<StreakMarkServer.Feed>("feeds");
@@ -81,7 +81,7 @@ export async function removeFeed(uid: string, feedId: string): Promise<DeleteRes
   const feed = await feedCollection.findOne({ _id: feedObjectId });
 
   if (!feed) {
-    throw new MarkError(404, `Feed with id ${feedId} does not exist!`);
+    throw new MarkError(404, `Feed with id "${feedId}" does not exist!`);
   }
 
   if (feed.uid !== uid) {

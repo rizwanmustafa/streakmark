@@ -7,7 +7,7 @@ export async function addUser(user: StreakMarkServer.User): Promise<InsertOneRes
   const prevUser = await getUserWithUid(user.uid);
 
   if (!prevUser) {
-    throw new MarkError(409, `User with uid ${user.uid} already exists!`);
+    throw new MarkError(409, `User with uid "${user.uid}" already exists!`);
   }
 
   const userObjectId = new ObjectId();
@@ -20,7 +20,7 @@ export async function removeUser(uid: string): Promise<void> {
   const user = await getUserWithUid(uid);
 
   if (!user) {
-    throw new MarkError(404, `User with uid ${uid} does not exist!`);
+    throw new MarkError(404, `User with uid "${uid}" does not exist!`);
   }
 
   const usersCollection = getCollection<StreakMarkServer.User>("users");
