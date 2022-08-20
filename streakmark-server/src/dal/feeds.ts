@@ -3,8 +3,6 @@ import { getCollection } from "../init/db";
 import { DeleteResult, InsertOneResult, ObjectId, UpdateResult } from "mongodb";
 import MarkError from "../utils/error";
 
-// TODO: Replace Logger calls with MarkErrors
-
 export async function addFeed(uid: string, feed: StreakMarkServer.Feed): Promise<InsertOneResult> {
   const user = getUserWithUid(uid);
 
@@ -13,7 +11,7 @@ export async function addFeed(uid: string, feed: StreakMarkServer.Feed): Promise
   }
 
   if (feed.uid !== uid) {
-    throw new MarkError(403, `User does not own feed!`);
+    throw new MarkError(403, "User does not own feed!");
   }
 
   const feeds = getCollection<StreakMarkServer.Feed>("feeds");
@@ -56,7 +54,7 @@ export async function updateFeed(uid: string, feedId: string, newFeed: StreakMar
   }
 
   if (feed.uid !== uid) {
-    throw new MarkError(403, `User does not own feed!`);
+    throw new MarkError(403, "User does not own feed!");
   }
 
   const query = {
@@ -93,5 +91,5 @@ export async function removeFeed(uid: string, feedId: string): Promise<DeleteRes
   return await feedCollection.deleteOne({
     uid: uid,
     _id: feedObjectId
-  })
+  });
 }
