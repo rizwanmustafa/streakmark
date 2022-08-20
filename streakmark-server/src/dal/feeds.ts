@@ -1,26 +1,25 @@
-import Logger from "../utils/logger";
 import { getUserWithUid } from "../utils/misc";
 import { getCollection } from "../init/db";
-import { ObjectId } from "mongodb";
+import { DeleteResult, InsertOneResult, ObjectId, UpdateResult } from "mongodb";
+import MarkError from "../utils/error";
 
 // TODO: Replace Logger calls with MarkErrors
 
-export async function addFeed(uid: string, feed: StreakMarkServer.Feed): Promise<void> {
+export async function addFeed(uid: string, feed: StreakMarkServer.Feed): Promise<InsertOneResult> {
   const user = getUserWithUid(uid);
 
   if (!user) {
-    Logger.error(`User with uid ${uid} does not exist!`);
-    return;
+    throw new MarkError(404, `User with uid ${uid} does not exist!`);
   }
 
   if (feed.uid !== uid) {
-    Logger.error(`User cannot perform this operation!`);
+    throw new MarkError(403, `User does not own feed!`);
   }
 
   const feeds = getCollection<StreakMarkServer.Feed>("feeds");
   const feedId = new ObjectId();
 
-  await feeds.insertOne({
+  return await feeds.insertOne({
     _id: feedId,
     ...feed
   });
@@ -42,11 +41,10 @@ export async function getFeeds(uid: string, feedId: string | null): Promise<Stre
   return feedArray;
 }
 
-export async function updateFeed(uid: string, feedId: string, newFeed: StreakMarkServer.Feed): Promise<void> {
+export async function updateFeed(uid: string, feedId: string, newFeed: StreakMarkServer.Feed): Promise<UpdateResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    Logger.error(`User with uid ${uid} does not exist`);
-    return;
+    throw new MarkError(404, `User with uid ${uid} does not exist`);
   }
 
   const feedCollection = getCollection<StreakMarkServer.Feed>("feeds");
@@ -54,13 +52,11 @@ export async function updateFeed(uid: string, feedId: string, newFeed: StreakMar
   const feed = await feedCollection.findOne({ _id: feedObjectId });
 
   if (!feed) {
-    Logger.error(`Feed with id ${feedId} does not exist`);
-    return;
+    throw new MarkError(404, `Feed with id ${feedId} does not exist`);
   }
 
   if (feed.uid !== uid) {
-    Logger.error(`User does not own feed!`);
-    return;
+    throw new MarkError(403, `User does not own feed!`);
   }
 
   const query = {
@@ -70,16 +66,16 @@ export async function updateFeed(uid: string, feedId: string, newFeed: StreakMar
   const update = {
     $set: newFeed,
   };
-  await feedCollection.updateOne(query, update);
+
+  return await feedCollection.updateOne(query, update);
 
 }
 
-export async function removeFeed(uid: string, feedId: string): Promise<void> {
+export async function removeFeed(uid: string, feedId: string): Promise<DeleteResult> {
   const user = getUserWithUid(uid);
 
   if (!user) {
-    Logger.error(`User with uid ${uid} does not exist!`);
-    return;
+    throw new MarkError(404, `User with uid ${uid} does not exist!`);
   }
 
   const feedCollection = getCollection<StreakMarkServer.Feed>("feeds");
@@ -87,15 +83,14 @@ export async function removeFeed(uid: string, feedId: string): Promise<void> {
   const feed = await feedCollection.findOne({ _id: feedObjectId });
 
   if (!feed) {
-    Logger.error(`Feed with id ${feedId} does not exist!`);
-    return;
+    throw new MarkError(404, `Feed with id ${feedId} does not exist!`);
   }
 
   if (feed.uid !== uid) {
-    Logger.error("User does not own feed!");
+    throw new MarkError(403, "User does not own feed!");
   }
 
-  await feedCollection.deleteOne({
+  return await feedCollection.deleteOne({
     uid: uid,
     _id: feedObjectId
   })

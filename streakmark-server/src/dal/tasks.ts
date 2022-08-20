@@ -1,39 +1,39 @@
-import { ObjectId } from "mongodb";
+import { DeleteResult, InsertOneResult, ObjectId, UpdateResult } from "mongodb";
 import { getCollection } from "../init/db";
-import Logger from "../utils/logger";
+import MarkError from "../utils/error";
 import { getUserWithUid, getFeedWithId } from "../utils/misc";
 
-// TODO: Replace these Logger.errors with MarkErrors
-
-export async function addTask(uid: string, task: StreakMarkServer.Task): Promise<void> {
+export async function addTask(uid: string, task: StreakMarkServer.Task): Promise<InsertOneResult> {
 
   const user = await getUserWithUid(uid);
   if (!user) {
-    Logger.error(`User with uid ${uid} does not exist`);
-    return;
+    throw new MarkError(404, `User with uid ${uid} does not exist`);
   }
 
   const feed = await getFeedWithId(task.feedId.toString());
   if (!feed) {
-    Logger.error(`Feed with id ${task.feedId} does not exist`);
-    return;
+    throw new MarkError(404, `Feed with id ${task.feedId} does not exist`);
   }
 
   if (feed.uid !== uid) {
-    Logger.error("User does not own feed");
-    return;
+    throw new MarkError(403, "User does not own feed");
   }
 
   const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
   const taskId = new ObjectId();
 
-  await taskCollection.insertOne({
+  return await taskCollection.insertOne({
     _id: taskId,
     ...task,
   });
 }
 
 export async function getTasks(uid: string, feedId: string | null): Promise<StreakMarkServer.Task[]> {
+  const user = await getUserWithUid(uid);
+  if (!user) {
+    throw new MarkError(404, `User with uid ${uid} does not exist`);
+  }
+
   const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
   const query: { uid: string, feedId?: ObjectId } = {
     uid: uid,
@@ -46,24 +46,21 @@ export async function getTasks(uid: string, feedId: string | null): Promise<Stre
   return tasksArray;
 }
 
-export async function updateTask(uid: string, taskId: string, newTask: StreakMarkServer.Task): Promise<void> {
+export async function updateTask(uid: string, taskId: string, newTask: StreakMarkServer.Task): Promise<UpdateResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    Logger.error(`User with uid ${uid} does not exist`);
-    return;
+    throw new MarkError(404, `User with uid ${uid} does not exist`);
   }
 
   const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
   const task = await taskCollection.findOne({ _id: new ObjectId(taskId) });
 
   if (!task) {
-    Logger.error(`Task with id ${taskId} does not exist`);
-    return;
+    throw new MarkError(404, `Task with id ${taskId} does not exist`);
   }
 
   if (task.uid !== uid) {
-    Logger.error("User does not own task");
-    return;
+    throw new MarkError(403, "User does not own task");
   }
 
   const query = {
@@ -73,32 +70,30 @@ export async function updateTask(uid: string, taskId: string, newTask: StreakMar
   const update = {
     $set: newTask,
   };
-  await taskCollection.updateOne(query, update);
+  return await taskCollection.updateOne(query, update);
 }
 
-export async function deleteTask(uid: string, taskId: string): Promise<void> {
+export async function deleteTask(uid: string, taskId: string): Promise<DeleteResult> {
   const user = await getUserWithUid(uid);
   if (!user) {
-    Logger.error(`User with uid ${uid} does not exist`);
-    return;
+    throw new MarkError(404, `User with uid ${uid} does not exist`);
   }
 
   const taskCollection = getCollection<StreakMarkServer.Task>("tasks");
   const task = await taskCollection.findOne({ _id: new ObjectId(taskId) });
 
   if (!task) {
-    Logger.error(`Task with id ${taskId} does not exist`);
-    return;
+    throw new MarkError(404, `Task with id ${taskId} does not exist`);
   }
 
   if (task.uid !== uid) {
-    Logger.error("User does not own task");
-    return;
+    throw new MarkError(403, "User does not own task");
   }
 
   const query = {
     uid: uid,
     _id: new ObjectId(taskId),
   };
-  await taskCollection.deleteOne(query);
+
+  return await taskCollection.deleteOne(query);
 }
