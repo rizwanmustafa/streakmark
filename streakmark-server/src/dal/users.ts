@@ -6,7 +6,7 @@ import { getUserWithUid } from "../utils/misc";
 export async function addUser(user: StreakMarkServer.User): Promise<InsertOneResult> {
   const prevUser = await getUserWithUid(user.uid);
 
-  if (!prevUser) {
+  if (prevUser) {
     throw new MarkError(409, `User with uid "${user.uid}" already exists!`);
   }
 
