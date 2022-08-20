@@ -24,6 +24,7 @@ declare namespace StreakMarkServer {
   }
 
   interface Board {
+    uid: string;
     title: string;
     description: string;
     feedIds: ObjectId[];
