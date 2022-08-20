@@ -1,4 +1,4 @@
-import { Document } from "mongodb";
+import { Document, ObjectId } from "mongodb";
 import { getCollection } from "../init/db";
 
 export async function getUserWithUid(uid: string): Promise<Document | null> {
@@ -11,7 +11,5 @@ export async function getUserWithUid(uid: string): Promise<Document | null> {
 export async function getFeedWithId(feedId: string): Promise<StreakMarkServer.Feed | null> {
   const feeds = await getCollection<StreakMarkServer.Feed>("feeds");
 
-
-
-  return feeds.findOne({ feedId });
+  return feeds.findOne({ _id: new ObjectId(feedId) });
 }
